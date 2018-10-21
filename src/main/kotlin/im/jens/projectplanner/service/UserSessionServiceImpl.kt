@@ -17,13 +17,14 @@ class UserSessionServiceImpl : UserSessionService {
     private var activeSessions = mutableMapOf<String, User>()
     override fun connect(sessionId: String, username: String): User {
         val user = User(userIdPool.incrementAndGet(), username)
-        log.info("Connected user: $username with session id: $sessionId")
-        activeSessions.putIfAbsent(sessionId, user)
+        log.info("Connected user: $username with session id: $sessionId and userid ${user.id}")
+        activeSessions[sessionId] = user
         return user
     }
 
     override fun disconnect(sessionId: String) {
-        val sessionUser =
+        //TODO get user and remove cast votes. But first track what users have joined what poll.
+        activeSessions.remove(sessionId)
         log.info("Disconnected user: ${activeSessions.getValue(sessionId)} with session: $sessionId")
     }
 }

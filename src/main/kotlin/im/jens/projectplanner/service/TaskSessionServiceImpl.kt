@@ -5,6 +5,7 @@ import im.jens.projectplanner.model.PlanningTask
 import im.jens.projectplanner.model.User
 import im.jens.projectplanner.model.Vote
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
@@ -12,6 +13,7 @@ import kotlin.collections.ArrayList
 import kotlin.streams.asSequence
 
 @Service
+@Scope("singleton")
 class TaskSessionServiceImpl : TaskSessionService {
 
 
