@@ -3,9 +3,8 @@ import Button from "@material-ui/core/Button/Button";
 import React from "react";
 import { Link } from 'react-router-dom'
 
-class WelcomeScreen extends Component {
+class Start extends Component {
     render() {
-        const {classes} = this.props
         const JoinLink = props => <Link to="/join" {...props} />
         const CreateLink = props => <Link to="/create" {...props} />
         return (
@@ -24,4 +23,4 @@ class WelcomeScreen extends Component {
     }
 }
 
-export default WelcomeScreen
+export default Start
