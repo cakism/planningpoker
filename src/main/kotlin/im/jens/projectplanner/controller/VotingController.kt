@@ -32,7 +32,7 @@ class VotingController {
     fun createPoll(@Header("simpSessionId") sessionId: String, newPoll: PlanningTaskDTO): PlanningTask {
         val user = userSessionService.connect(sessionId, newPoll.host) //TODO change sessionid to var for host?
         log.info("Accepting new task...")
-        return taskSessionService.registerNewTask(user, newPoll.pollName, newPoll.text)
+        return taskSessionService.registerNewTask(user, newPoll.pollName, newPoll.pollDescription)
     }
 
 
