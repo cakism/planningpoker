@@ -1,5 +1,3 @@
-import {Switch, Route} from 'react-router-dom'
-import Poker from './Poker'
 import React from "react";
 import { CSSTransitionGroup } from 'react-transition-group'
 import '../css/common.css'

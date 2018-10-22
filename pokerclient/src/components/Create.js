@@ -1,5 +1,4 @@
-import {Switch, Route, Link, Redirect} from 'react-router-dom'
-import Poker from './Poker'
+import {Redirect} from 'react-router-dom'
 import React from "react";
 import {CSSTransitionGroup} from 'react-transition-group'
 import '../css/common.css'
@@ -27,11 +26,10 @@ class Create extends React.Component {
     };
 
     handleCreate = event => {
-
+        var self = this
         console.log("values", this.state.host, this.state.pollName, this.state.pollDescription);
         //To be done:check for empty values before hitting submit
-        var self = this;
-        var newPoll = {
+        let newPoll = {
             "host": this.state.host,
             "pollName": this.state.pollName,
             "pollDescription": this.state.pollDescription
@@ -43,15 +41,6 @@ class Create extends React.Component {
 
                     console.log('Got successful response, got ' + response.data);
                     self.setState({createdPoll: response.data, toPoker: true})
-                    /*var loginscreen = [];
-                    loginscreen.push(<Login parentContext={this}/>);
-                    var loginmessage = "Not Registered yet.Go to registration";
-                    self.props.parentContext.setState({
-                        loginscreen: loginscreen,
-                        loginmessage: loginmessage,
-                        buttonLabel: "Register",
-                        isLogin: true
-                    });*/
 
                 }
             })
@@ -61,12 +50,10 @@ class Create extends React.Component {
     };
 
     render() {
-        const { toPoker, createdPoll } = this.state
+        const { toPoker, createdPoll } = this.state;
         if (toPoker === true) {
-            console.log("In redirect..");
-            return (<Redirect to={{pathname: '/poker', state: {createdPoll: createdPoll}}}/>)
+            return (<Redirect to={{pathname: '/poker', state: {joinCode: createdPoll.joinCode, username: createdPoll.host}}}/>)
         }
-        //const StartAppLink = props => <Link to={{pathname: '/poker', state: {createdPoll: this.state.createdPoll}}}>Create poll</Link>;
 
         return (
             <CSSTransitionGroup
