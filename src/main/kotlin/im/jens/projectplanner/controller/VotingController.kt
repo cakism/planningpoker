@@ -13,11 +13,10 @@ import org.springframework.messaging.handler.annotation.Header
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin(origins = ["http://localhost:3000"])
 class VotingController {
 
     private val log = LoggerFactory.getLogger(VotingController::class.java)
@@ -28,10 +27,11 @@ class VotingController {
     @Autowired
     private lateinit var userSessionService: UserSessionServiceImpl
 
-    @RequestMapping("/create", method = arrayOf(RequestMethod.GET))
-    fun createPoll(@Header("simpSessionId") sessionId: String, newPoll: PlanningTaskDTO): PlanningTask {
-        val user = userSessionService.connect(sessionId, newPoll.host) //TODO change sessionid to var for host?
+    @RequestMapping("/create", method = arrayOf(RequestMethod.POST))
+    fun createPoll(@Header("simpSessionId") sessionId: String?, @RequestBody newPoll: PlanningTaskDTO): PlanningTask {
+        val user = userSessionService.connect("temp", newPoll.host) //TODO change sessionid to var for host?
         log.info("Accepting new task...")
+
         return taskSessionService.registerNewTask(user, newPoll.pollName, newPoll.pollDescription)
     }
 

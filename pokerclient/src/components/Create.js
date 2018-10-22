@@ -1,9 +1,11 @@
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, Link, Redirect} from 'react-router-dom'
 import Poker from './Poker'
 import React from "react";
 import {CSSTransitionGroup} from 'react-transition-group'
 import '../css/common.css'
 import TextField from "@material-ui/core/TextField/TextField";
+import axios from 'axios'
+import Button from "@material-ui/core/Button/Button";
 
 class Create extends React.Component {
 
@@ -12,7 +14,9 @@ class Create extends React.Component {
         this.state = {
             host: '',
             pollName: '',
-            pollDescription: ''
+            pollDescription: '',
+            createdPoll: '',
+            toPoker: false
         }
     }
 
@@ -28,16 +32,18 @@ class Create extends React.Component {
         //To be done:check for empty values before hitting submit
         var self = this;
         var newPoll = {
-            "host": this.state.first_name,
-            "pollName": this.state.last_name,
-            "pollDescription": this.state.email
+            "host": this.state.host,
+            "pollName": this.state.pollName,
+            "pollDescription": this.state.pollDescription
         };
-        axios.post('localhost:8080/create', newPoll)
+        axios.post('http://localhost:8080/create', newPoll)
             .then(function (response) {
                 console.log(response);
-                if (response.data.code === 200) {
-                    console.log("Got successful response");
-                    var loginscreen = [];
+                if (response.status === 200) {
+
+                    console.log('Got successful response, got ' + response.data);
+                    self.setState({createdPoll: response.data, toPoker: true})
+                    /*var loginscreen = [];
                     loginscreen.push(<Login parentContext={this}/>);
                     var loginmessage = "Not Registered yet.Go to registration";
                     self.props.parentContext.setState({
@@ -45,15 +51,22 @@ class Create extends React.Component {
                         loginmessage: loginmessage,
                         buttonLabel: "Register",
                         isLogin: true
-                    });
+                    });*/
+
                 }
             })
             .catch(function (error) {
                 console.log(error);
             });
-    }
+    };
 
     render() {
+        const { toPoker, createdPoll } = this.state
+        if (toPoker === true) {
+            console.log("In redirect..");
+            return (<Redirect to={{pathname: '/poker', state: {createdPoll: createdPoll}}}/>)
+        }
+        //const StartAppLink = props => <Link to={{pathname: '/poker', state: {createdPoll: this.state.createdPoll}}}>Create poll</Link>;
 
         return (
             <CSSTransitionGroup
@@ -79,7 +92,7 @@ class Create extends React.Component {
                         id="poll-name"
                         label="Poll name"
                         value={this.state.pollName}
-                        onChange={this.handleChange('pollname')}
+                        onChange={this.handleChange('pollName')}
                         margin="normal"
                         variant="outlined"
                     />
@@ -89,12 +102,15 @@ class Create extends React.Component {
                         multiline
                         rowsMax="4"
                         value={this.state.pollDescription}
-                        onChange={this.handleChange('polldescription')}
+                        onChange={this.handleChange('pollDescription')}
                         margin="normal"
                         helperText="Optional"
                         variant="outlined"
                     />
-
+                    <Button variant="contained" color='primary'
+                            className="actionbtn" onClick={this.handleCreate}>
+                        Create poll
+                    </Button>
                 </div>
             </CSSTransitionGroup>
         )
