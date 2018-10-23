@@ -11,7 +11,7 @@ interface TaskSessionService {
 
     fun getAllVotes(taskId: Long): Collection<CastVote>
 
-    fun registerVote(taskId: Long, vote: Vote): CastVote
+    fun registerVote(taskId: Long, vote: Vote, user: User): CastVote
 
     fun getTask(joinCode: String): PlanningTask
 }

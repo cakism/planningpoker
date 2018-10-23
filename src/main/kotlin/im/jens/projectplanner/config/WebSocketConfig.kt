@@ -12,11 +12,11 @@ class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.enableSimpleBroker("/topic") //In-mem msg broker destination for msgs back to the clients
-        registry.setApplicationDestinationPrefixes("/app") //Destination for clients targeting application
+        registry.setApplicationDestinationPrefixes("/vote") //Destination for clients targeting application
     }
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
-        registry.addEndpoint("/vote").setAllowedOrigins("localhost:3000")
+        registry.addEndpoint("/app", "/info").setAllowedOrigins("*")
                 .withSockJS()
     }
 

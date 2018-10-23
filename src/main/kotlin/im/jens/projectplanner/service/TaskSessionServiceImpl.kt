@@ -45,8 +45,8 @@ class TaskSessionServiceImpl : TaskSessionService {
         return ArrayList(taskRepo[taskId]?.votes)
     }
 
-    override fun registerVote(taskId: Long, vote: Vote): CastVote {
-        val castVote = CastVote(vote.user, vote.points)
+    override fun registerVote(taskId: Long, vote: Vote, user: User): CastVote {
+        val castVote = CastVote(user, vote.points)
         taskRepo[taskId]?.votes?.add(castVote)
         return castVote
     }
