@@ -11,10 +11,10 @@ class Start extends Component {
             <div>
                 <header className="App-header">
                     <h1 className="App-title">Planning Poker</h1>
-                    <Button variant="contained" component={CreateLink} raised color='primary' className="actionbtn">
+                    <Button variant="contained" component={CreateLink} color='primary' className="actionbtn">
                         Create
                     </Button>
-                    <Button variant="contained" component={JoinLink} raised color='primary' className="actionbtn">
+                    <Button variant="contained" component={JoinLink} color='primary' className="actionbtn">
                         Join
                     </Button>
                 </header>

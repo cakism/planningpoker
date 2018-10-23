@@ -28,7 +28,7 @@ class Create extends React.Component {
     handleCreate = event => {
         var self = this
         console.log("values", this.state.host, this.state.pollName, this.state.pollDescription);
-        //To be done:check for empty values before hitting submit
+        //Todo input check
         let newPoll = {
             "host": this.state.host,
             "pollName": this.state.pollName,
@@ -36,10 +36,9 @@ class Create extends React.Component {
         };
         axios.post('http://localhost:8080/create', newPoll)
             .then(function (response) {
-                console.log(response);
                 if (response.status === 200) {
 
-                    console.log('Got successful response, got ' + response.data);
+                    console.log('Got successful response, got ' + JSON.stringify(response.data));
                     self.setState({createdPoll: response.data, toPoker: true})
 
                 }
@@ -52,7 +51,7 @@ class Create extends React.Component {
     render() {
         const { toPoker, createdPoll } = this.state;
         if (toPoker === true) {
-            return (<Redirect to={{pathname: '/poker', state: {joinCode: createdPoll.joinCode, username: createdPoll.host}}}/>)
+            return (<Redirect to={{pathname: '/poker', state: {joinCode: createdPoll.joinCode, user: createdPoll.host}}}/>)
         }
 
         return (
@@ -63,12 +62,12 @@ class Create extends React.Component {
                 transitionEnter={false}
                 transitionLeave={false}>
 
-                <div>
+                <div className="root">
                     <h1>Create a new poll</h1>
                     <TextField
                         required
                         id="username"
-                        label="Name"
+                        label="Your name"
                         value={this.state.host}
                         onChange={this.handleChange('host')}
                         margin="normal"

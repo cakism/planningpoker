@@ -2,18 +2,23 @@ import React from 'react'
 import '../css/common.css'
 import {CSSTransitionGroup} from 'react-transition-group'
 import SockJsClient from 'react-stomp';
+import FormControl from "@material-ui/core/FormControl/FormControl";
+import Select from "@material-ui/core/Select/Select";
+import MenuItem from "@material-ui/core/MenuItem/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText/FormHelperText";
+import TextField from "@material-ui/core/TextField/TextField";
 
 class Poker extends React.Component {
 
     constructor(props) {
         super(props);
-        const {joinCode, username} = props.location.state;
+        const {joinCode, user} = props.location.state;
         this.state = {
-            username: username,
+            user: user,
             joinCode: joinCode,
+            points: '',
             poll: ''
         };
-
         //TODO const msgDestinationBaseUrl = '/vote/' + this.state.joinCode + "."; god damn scope shit
     }
 
@@ -22,22 +27,39 @@ class Poker extends React.Component {
     }
 
     connectUser = (username) => {
-        this.clientRef.sendMessage('/vote/' + this.state.joinCode  + '.join', username)
-    }
-
-    castVote = (points) => {
-        this.clientRef.sendMessage('/vote/' + this.state.joinCode  + '.join', points)
+        this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.join', username)
     };
 
+    castVote = (event) => {
+        let points = event.target.value
+        this.setState({ [event.target.name]: points });
+        console.log("Got new vote event with " + points + " points");
+        this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.vote', points)
+    };
 
-    handleJoins = (poll) => {
-        // show poll members, pollname, etc.
+    handleIncomingMsgs = (msg, topic) => {
+        console.log('msg from topic: ' + topic)
+        if (topic.endsWith('.joins')) {
+            this.handleJoins(msg)
+        } else if (topic.endsWith('.votes')) {
+            this.handleVotes(msg)
+        }
+    };
+
+    handleJoins = (latestPoll) => {
+        this.setState({poll: latestPoll});
+        console.log("Poll updated: " + JSON.stringify(latestPoll))
+    };
+
+    handleVotes = (castVote) => {
+        console.log("New vote cast: " + JSON.stringify(castVote))
+
     };
 
     render() {
+        //const { classes } = this.props;
 
         const baseUrl = "http://localhost:8080/app";
-        console.log("Using baseUrl: " + baseUrl);
         return (
             <CSSTransitionGroup
                 transitionName="baseTransition"
@@ -46,27 +68,86 @@ class Poker extends React.Component {
                 transitionEnter={false}
                 transitionLeave={false}>
 
-                <SockJsClient url={baseUrl} topics={[this.state.joinCode + '.joins']}
-                              onMessage={(msg) => {
-                                  console.log(msg);
-                              }}
+                <SockJsClient url={baseUrl} topics={['/topic/' + this.state.joinCode + '.joins']}
+                              onMessage={this.handleIncomingMsgs}
                               ref={(client) => {
                                   this.clientRef = client
                               }}
                               onConnect={() => {
                                   this.setState({clientConnected: true});
-                                  this.connectUser("test")
+                                  this.connectUser(this.state.user.name)
                               }}
                               onDisconnect={() => {
                                   this.setState({clientConnected: false})
                               }}/>
 
-                <div>
-                    The poker app will go here, it has joincode: ${this.state.joinCode}
+                <div className='root'>
+                    <PokerPoll joinCode={this.state.joinCode} poll={this.state.poll}/>
+                    <div id="me">
+                        <p>{this.state.user.name} </p>
+                        <p className="small">(That's you)</p>
+                        <FormControl className='pointselector'>
+                            <Select
+                                onChange={this.castVote}
+                                value={this.state.points}
+                                displayEmpty
+                                name="points">
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={'0'}>Zero</MenuItem>
+                                <MenuItem value={'0.5'}>1/2</MenuItem>
+                                <MenuItem value={'1'}>1</MenuItem>
+                                <MenuItem value={'2'}>2</MenuItem>
+                                <MenuItem value={'3'}>3</MenuItem>
+                                <MenuItem value={'5'}>5</MenuItem>
+                                <MenuItem value={'8'}>8</MenuItem>
+                                <MenuItem value={'13'}>13</MenuItem>
+                            </Select>
+                            <FormHelperText>Points</FormHelperText>
+                        </FormControl>
+                    </div>
                 </div>
             </CSSTransitionGroup>
         )
     }
 }
 
+function PokerPoll(props) {
+    return (
+        <div className="center">
+            <TextField
+                id="joincode"
+                label="Room join code"
+                value={props.joinCode}
+                margin="normal"
+                InputProps={{
+                    readOnly: true,
+                }}
+                variant="outlined"
+            />
+            <h2>{props.poll.pollName}</h2>
+            <h3>{props.poll.pollDescription}</h3>
+        </div>
+    )
+}
+
+const PokerVoteList = (props) => {
+    return (
+        <div>
+
+        </div>
+    )
+}
+
+function PokerMember(props) {
+    return (
+        <div id={props.vote.user.id}>
+            <h2>{props.vote.user.user}</h2>
+            <h3>{props.vote.points}</h3>
+        </div>
+    )
+}
+
+//TODO typechecking with proptypes
 export default Poker
