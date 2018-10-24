@@ -31,7 +31,7 @@ class Poker extends React.Component {
     };
 
     castVote = (event) => {
-        let points = event.target.value;
+        const points = event.target.value;
         this.setState({[event.target.name]: points});
         console.log("Got new vote event with " + points + " points");
         this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.vote', points)
@@ -47,14 +47,14 @@ class Poker extends React.Component {
     };
 
     handleJoins = (latestPoll) => {
-        let filteredVotes = this.filterMyVote(Array.from(latestPoll.votes));
+        const filteredVotes = this.filterMyVote(Array.from(latestPoll.votes));
         this.setState({poll: latestPoll, castVotes: filteredVotes});
         console.log("Poll updated: " + JSON.stringify(latestPoll))
     };
 
     filterMyVote = (incomingVotes) => {
         console.log("Votes pre-filter: " + JSON.stringify(incomingVotes));
-        let votesWithoutMine = incomingVotes.filter((value, index, array) => {
+        const votesWithoutMine = incomingVotes.filter((value, index, array) => {
             return value.user.id !== this.state.user.id
         });
         console.log("Without my vote: " + JSON.stringify(votesWithoutMine));
@@ -62,14 +62,14 @@ class Poker extends React.Component {
     };
 
     handleVotes = (msg) => {
-        let filteredVotes = this.filterMyVote(Array.from(msg));
+        const filteredVotes = this.filterMyVote(Array.from(msg));
         this.setState({castVotes: filteredVotes});
 
 
     };
 
     render() {
-        //const { classes } = this.props;
+        const { joinCode, user, poll, castVotes } = this.state
 
 
         const baseUrl = window.location.protocol + '//'+ window.location.hostname +":8080/app";
@@ -83,7 +83,7 @@ class Poker extends React.Component {
                 transitionLeave={false}>
 
                 <SockJsClient url={baseUrl}
-                              topics={['/topic/' + this.state.joinCode + '.joins', '/topic/' + this.state.joinCode + '.votes']}
+                              topics={['/topic/' + joinCode + '.joins', '/topic/' + joinCode + '.votes']}
                               onMessage={this.handleIncomingMsgs}
                               ref={(client) => {
                                   this.clientRef = client
@@ -97,9 +97,9 @@ class Poker extends React.Component {
                               }}/>
 
                 <div className='root'>
-                    <PokerPoll joinCode={this.state.joinCode} poll={this.state.poll}/>
+                    <PokerPoll joinCode={joinCode} poll={poll}/>
                     <div id="me">
-                        <p>{this.state.user.name} </p>
+                        <p>{user.name} </p>
                         <p className="small">(That´s you)</p>
                         <FormControl className='pointselector'>
                             <Select
@@ -121,7 +121,7 @@ class Poker extends React.Component {
                             </Select>
                             <FormHelperText>Points</FormHelperText>
                         </FormControl>
-                        <PokerVoteList castVotes={this.state.castVotes}/>
+                        <PokerVoteList castVotes={castVotes}/>
                     </div>
                 </div>
             </CSSTransitionGroup>

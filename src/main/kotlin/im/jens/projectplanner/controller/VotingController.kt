@@ -1,7 +1,9 @@
 package im.jens.projectplanner.controller
 
 import im.jens.projectplanner.model.*
+import im.jens.projectplanner.service.TaskSessionService
 import im.jens.projectplanner.service.TaskSessionServiceImpl
+import im.jens.projectplanner.service.UserSessionService
 import im.jens.projectplanner.service.UserSessionServiceImpl
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,15 +12,10 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
-class VotingController {
+class VotingController @Autowired constructor(val taskSessionService: TaskSessionService, val userSessionService: UserSessionService) {
 
     private val log = LoggerFactory.getLogger(VotingController::class.java)
 
-    @Autowired
-    private lateinit var taskSessionService: TaskSessionServiceImpl
-
-    @Autowired
-    private lateinit var userSessionService: UserSessionServiceImpl
 
     @RequestMapping("/create", method = [RequestMethod.POST])
     fun createPoll(@RequestBody newPoll: PlanningTaskDTO): PlanningTask {

@@ -15,7 +15,7 @@ class UserSessionServiceImpl : UserSessionService {
 
     private var userIdPool = AtomicLong(0)
 
-    private var activeSessions = mutableMapOf<String, User>()
+    private var activeSessions = HashMap<String, User>()
 
     override fun connect(sessionId: String, user: User) {
         log.info("Connected user: ${user.name} with session id: $sessionId and userid ${user.id}")

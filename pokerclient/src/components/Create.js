@@ -17,6 +17,7 @@ class Create extends React.Component {
             createdPoll: '',
             toPoker: false
         }
+        this.handleCreate = this.handleCreate.bind(this)
     }
 
     handleChange = name => event => {
@@ -26,21 +27,21 @@ class Create extends React.Component {
     };
 
     handleCreate = event => {
-        var self = this
-        console.log("values", this.state.host, this.state.pollName, this.state.pollDescription);
+        const { host, pollName, pollDescription } = this.state;
+        console.log("values", host, pollName, pollDescription);
         //Todo input check
-        let newPoll = {
-            "host": this.state.host,
-            "pollName": this.state.pollName,
-            "pollDescription": this.state.pollDescription
+        const newPoll = {
+            "host": host,
+            "pollName": pollName,
+            "pollDescription": pollDescription
         };
-        const baseUrl = window.location.protocol + '//'+ window.location.hostname +":8080";
-        axios.post(baseUrl+'/create', newPoll)
-            .then(function (response) {
+        const baseUrl = window.location.protocol + '//' + window.location.hostname + ":8080";
+        axios.post(baseUrl + '/create', newPoll)
+            .then(response => {
                 if (response.status === 200) {
 
                     console.log('Got successful response, got ' + JSON.stringify(response.data));
-                    self.setState({createdPoll: response.data, toPoker: true})
+                    this.setState({createdPoll: response.data, toPoker: true})
 
                 }
             })
@@ -50,9 +51,10 @@ class Create extends React.Component {
     };
 
     render() {
-        const { toPoker, createdPoll } = this.state;
-        if (toPoker === true) {
-            return (<Redirect to={{pathname: '/poker', state: {joinCode: createdPoll.joinCode, user: createdPoll.host}}}/>)
+        const {toPoker, createdPoll, host, pollName, pollDescription} = this.state;
+        if (toPoker) {
+            return (
+                <Redirect to={{pathname: '/poker', state: {joinCode: createdPoll.joinCode, user: createdPoll.host}}}/>)
         }
 
         return (
@@ -69,7 +71,7 @@ class Create extends React.Component {
                         required
                         id="username"
                         label="Your name"
-                        value={this.state.host}
+                        value={host}
                         onChange={this.handleChange('host')}
                         margin="normal"
                         variant="outlined"
@@ -78,7 +80,7 @@ class Create extends React.Component {
                         required
                         id="poll-name"
                         label="Poll name"
-                        value={this.state.pollName}
+                        value={pollName}
                         onChange={this.handleChange('pollName')}
                         margin="normal"
                         variant="outlined"
@@ -88,7 +90,7 @@ class Create extends React.Component {
                         label="Poll description"
                         multiline
                         rowsMax="4"
-                        value={this.state.pollDescription}
+                        value={pollDescription}
                         onChange={this.handleChange('pollDescription')}
                         margin="normal"
                         helperText="Optional"

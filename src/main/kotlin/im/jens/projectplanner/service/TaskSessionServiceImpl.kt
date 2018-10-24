@@ -21,7 +21,7 @@ class TaskSessionServiceImpl : TaskSessionService {
     private val taskRepo: MutableMap<Long, PlanningTask> = mutableMapOf()
 
     private fun getJoinCode(): String {
-        val source = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        val source = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ"
         return Random().ints(4, 0, source.length)
                 .asSequence()
                 .map(source::get)

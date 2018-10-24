@@ -17,6 +17,7 @@ class Join extends React.Component {
             user: '',
             toPoker: false
         }
+        this.handleJoin = this.handleJoin.bind(this)
     }
 
     handleChange = name => event => {
@@ -26,16 +27,15 @@ class Join extends React.Component {
     };
 
     handleJoin = event => {
-        var self = this
         //Todo : input check
-        let newUser = {username: this.state.username};
+        const newUser = {username: this.state.username};
         const baseUrl = window.location.protocol + '//'+ window.location.hostname +":8080";
         axios.post(baseUrl+'/createuser', newUser)
-            .then(function (response) {
+            .then(response => {
                 if (response.status === 200) {
 
                     console.log('Got successful response from createuser: ' + JSON.stringify(response.data));
-                    self.setState({user: response.data, toPoker: true})
+                    this.setState({user: response.data, toPoker: true})
 
                 }
             })
@@ -45,9 +45,10 @@ class Join extends React.Component {
     };
 
     render() {
-        if (this.state.toPoker === true) {
+        const { toPoker, joinCode, user } = this.state
+        if (toPoker) {
             return (
-                <Redirect to={{pathname: '/poker', state: {joinCode: this.state.joinCode, user: this.state.user}}}/>)
+                <Redirect to={{pathname: '/poker', state: {joinCode: joinCode, user: user}}}/>)
         }
 
         return (
