@@ -84,7 +84,7 @@ class Poker extends React.Component {
                     <PokerPoll joinCode={this.state.joinCode} poll={this.state.poll}/>
                     <div id="me">
                         <p>{this.state.user.name} </p>
-                        <p className="small">(That's you)</p>
+                        <p className="small">(That´s you)</p>
                         <FormControl className='pointselector'>
                             <Select
                                 onChange={this.castVote}
