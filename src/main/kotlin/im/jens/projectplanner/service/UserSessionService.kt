@@ -12,4 +12,5 @@ interface UserSessionService {
 
 
     fun getUser(sessionId: String): User
+    fun getUser(userId: Int): User
 }

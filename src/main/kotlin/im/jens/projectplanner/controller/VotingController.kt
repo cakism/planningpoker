@@ -1,13 +1,11 @@
 package im.jens.projectplanner.controller
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import im.jens.projectplanner.model.*
 import im.jens.projectplanner.service.TaskSessionServiceImpl
 import im.jens.projectplanner.service.UserSessionServiceImpl
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.handler.annotation.*
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -38,12 +36,12 @@ class VotingController {
     @SendTo("/topic/{pollCode}.votes")
     fun vote(@Header("simpSessionId") sessionId: String,
              @DestinationVariable("pollCode") pollCode: String,
-             @Payload vote: Number): CastVote? {
+             @Payload vote: Number): Set<CastVote>? {
         log.info("Received vote from room $pollCode with $vote from session: $sessionId")
         return try {
             val task = taskSessionService.getTask(pollCode) //throws exception if no task is found for pollcode
             val user = userSessionService.getUser(sessionId) //throws exception if no user if found for sessionid
-            taskSessionService.registerVote(task.id, vote.toString(), user) //Returns castVote
+            taskSessionService.registerVote(task.id, vote.toString(), user)
         } catch (e: Exception) {
             log.error("Error while trying to cast vote: $e")
             null
@@ -54,11 +52,10 @@ class VotingController {
     @SendTo("/topic/{pollCode}.joins")
     fun join(@Header("simpSessionId") sessionId: String,
              @DestinationVariable("pollCode") pollCode: String,
-             @Payload username: String): PlanningTask? {
-        log.info("User joined with username: $username")
+             @Payload user: User): PlanningTask? {
+        log.info("User joined with username: ${user.name} and id: ${user.id}")
         return try {
             val planningTask = taskSessionService.getTask(pollCode) //throws exception if no task is found for pollcode
-            val user = userSessionService.createUser(username)
             userSessionService.connect(sessionId, user)
             planningTask
         } catch (e: NoSuchElementException) {

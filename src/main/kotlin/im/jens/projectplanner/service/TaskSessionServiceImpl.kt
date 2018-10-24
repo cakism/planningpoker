@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
-import kotlin.collections.ArrayList
 import kotlin.streams.asSequence
 
 @Service
@@ -40,15 +39,12 @@ class TaskSessionServiceImpl : TaskSessionService {
         return taskRepo.values.single { it.joinCode == joinCode }
     }
 
-    override fun getAllVotes(taskId: Long): Collection<CastVote> {
-        return ArrayList(taskRepo[taskId]?.votes)
-    }
-
-    override fun registerVote(taskId: Long, vote: String, user: User): CastVote {
+    override fun registerVote(taskId: Long, vote: String, user: User): Set<CastVote>? {
         val castVote = CastVote(user, vote)
-        taskRepo[taskId]?.votes?.add(castVote)
-        return castVote
+        taskRepo[taskId]?.votes?.apply {
+            removeIf { it == castVote }
+            add(castVote)
+        }
+        return taskRepo[taskId]?.votes
     }
-
-
 }

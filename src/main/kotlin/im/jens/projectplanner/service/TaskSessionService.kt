@@ -8,9 +8,7 @@ interface TaskSessionService {
 
     fun registerNewTask(host: User, pollName: String, text: String?): PlanningTask
 
-    fun getAllVotes(taskId: Long): Collection<CastVote>
-
-    fun registerVote(taskId: Long, vote: String, user: User): CastVote
+    fun registerVote(taskId: Long, vote: String, user: User): Set<CastVote>?
 
     fun getTask(joinCode: String): PlanningTask
 }

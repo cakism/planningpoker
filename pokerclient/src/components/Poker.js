@@ -17,7 +17,8 @@ class Poker extends React.Component {
             user: user,
             joinCode: joinCode,
             points: '',
-            poll: ''
+            poll: '',
+            castVotes: []
         };
     }
 
@@ -25,19 +26,19 @@ class Poker extends React.Component {
         console.log('Loaded poker room with base joincode:' + this.state.joinCode)
     }
 
-    connectUser = (username) => {
-        this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.join', username)
+    connectUser = (user) => {
+        this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.join', JSON.stringify(user))
     };
 
     castVote = (event) => {
-        let points = event.target.value
+        let points = event.target.value;
         this.setState({[event.target.name]: points});
         console.log("Got new vote event with " + points + " points");
         this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.vote', points)
     };
 
     handleIncomingMsgs = (msg, topic) => {
-        console.log('msg from topic: ' + topic)
+        console.log('msg from topic: ' + topic);
         if (topic.endsWith('.joins')) {
             this.handleJoins(msg)
         } else if (topic.endsWith('.votes')) {
@@ -46,12 +47,25 @@ class Poker extends React.Component {
     };
 
     handleJoins = (latestPoll) => {
-        this.setState({poll: latestPoll});
+        let filteredVotes = this.filterMyVote(Array.from(latestPoll.votes));
+        this.setState({poll: latestPoll, castVotes: filteredVotes});
         console.log("Poll updated: " + JSON.stringify(latestPoll))
     };
 
-    handleVotes = (castVote) => {
-        console.log("New vote cast: " + JSON.stringify(castVote))
+    filterMyVote = (incomingVotes) => {
+        console.log("Votes pre-filter: " + JSON.stringify(incomingVotes));
+        let votesWithoutMine = incomingVotes.filter((value, index, array) => {
+            console.log(value.user.id +' :::: ' + this.state.user.id);
+            return value.user.id !== this.state.user.id
+        });
+        console.log("Without my vote: " + JSON.stringify(votesWithoutMine));
+        return votesWithoutMine
+    };
+
+    handleVotes = (msg) => {
+        let filteredVotes = this.filterMyVote(Array.from(msg));
+        this.setState({castVotes: filteredVotes});
+
 
     };
 
@@ -67,14 +81,15 @@ class Poker extends React.Component {
                 transitionEnter={false}
                 transitionLeave={false}>
 
-                <SockJsClient url={baseUrl} topics={['/topic/' + this.state.joinCode + '.joins']}
+                <SockJsClient url={baseUrl}
+                              topics={['/topic/' + this.state.joinCode + '.joins', '/topic/' + this.state.joinCode + '.votes']}
                               onMessage={this.handleIncomingMsgs}
                               ref={(client) => {
                                   this.clientRef = client
                               }}
                               onConnect={() => {
                                   this.setState({clientConnected: true});
-                                  this.connectUser(this.state.user.name)
+                                  this.connectUser(this.state.user)
                               }}
                               onDisconnect={() => {
                                   this.setState({clientConnected: false})
@@ -105,7 +120,7 @@ class Poker extends React.Component {
                             </Select>
                             <FormHelperText>Points</FormHelperText>
                         </FormControl>
-                        <PokerVoteList castVotes={[]}/>
+                        <PokerVoteList castVotes={this.state.castVotes}/>
                     </div>
                 </div>
             </CSSTransitionGroup>
@@ -135,7 +150,7 @@ function PokerPoll(props) {
 const PokerVoteList = ({castVotes}) => {
 
     const pokerFace = castVotes.map((vote) => {
-        return (<PokerMember user={vote.from} key={vote.from.id} points={vote.points}/>)
+        return (<PokerMember user={vote.user} key={vote.user.id} points={vote.points}/>)
     });
     return (<div>{pokerFace}</div>);
 
@@ -144,7 +159,7 @@ const PokerVoteList = ({castVotes}) => {
 const PokerMember = ({user, points}) => {
     return (
         <span id={user.id}>
-            <h2>{user.user}</h2>
+            <h2>{user.name}</h2>
             <h3>{points}</h3>
         </span>
     )

@@ -28,11 +28,14 @@ class UserSessionServiceImpl : UserSessionService {
         return User(id, username)
     }
 
-    override fun getUser(sessionId: String): User = activeSessions[sessionId]?: throw IllegalArgumentException("No user found with that sessionid")
+    override fun getUser(sessionId: String): User = activeSessions[sessionId]
+            ?: throw IllegalArgumentException("No user found with that sessionid")
 
     override fun disconnect(sessionId: String) {
         //TODO get user from list and remove all cast votes. But first save what users are in what polls to avoid having to check all of them for a user
         activeSessions.remove(sessionId)
         log.info("Disconnected user: ${activeSessions.getValue(sessionId)} with session: $sessionId")
     }
+
+    override fun getUser(userId: Int): User = activeSessions.values.single { it.id == userId.toLong() }
 }
