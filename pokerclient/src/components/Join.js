@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField/TextField";
 import axios from 'axios'
 import Button from "@material-ui/core/Button/Button";
 
+
 class Join extends React.Component {
 
     constructor(props) {
@@ -44,7 +45,8 @@ class Join extends React.Component {
 
     render() {
         if (this.state.toPoker === true) {
-            return (<Redirect to={{pathname: '/poker', state: {joinCode: this.state.joinCode, user: this.state.user}}}/>)
+            return (
+                <Redirect to={{pathname: '/poker', state: {joinCode: this.state.joinCode, user: this.state.user}}}/>)
         }
 
         return (
@@ -55,8 +57,8 @@ class Join extends React.Component {
                 transitionEnter={false}
                 transitionLeave={false}>
 
-                <div className="root">
-                    <h1>Join a planning poker poll</h1>
+                <h1 className="center">Join a planning poker poll</h1>
+                <div className="centercolumn">
                     <TextField
                         required
                         id="username"

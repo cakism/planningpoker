@@ -55,7 +55,6 @@ class Poker extends React.Component {
     filterMyVote = (incomingVotes) => {
         console.log("Votes pre-filter: " + JSON.stringify(incomingVotes));
         let votesWithoutMine = incomingVotes.filter((value, index, array) => {
-            console.log(value.user.id +' :::: ' + this.state.user.id);
             return value.user.id !== this.state.user.id
         });
         console.log("Without my vote: " + JSON.stringify(votesWithoutMine));
@@ -106,17 +105,17 @@ class Poker extends React.Component {
                                 value={this.state.points}
                                 displayEmpty
                                 name="points">
-                                <MenuItem value="">
+                                <MenuItem value="" disabled>
                                     <em>None</em>
                                 </MenuItem>
-                                <MenuItem value={'0'}>Zero</MenuItem>
-                                <MenuItem value={'0.5'}>1/2</MenuItem>
-                                <MenuItem value={'1'}>1</MenuItem>
-                                <MenuItem value={'2'}>2</MenuItem>
-                                <MenuItem value={'3'}>3</MenuItem>
-                                <MenuItem value={'5'}>5</MenuItem>
-                                <MenuItem value={'8'}>8</MenuItem>
-                                <MenuItem value={'13'}>13</MenuItem>
+                                <MenuItem value={0}>Zero</MenuItem>
+                                <MenuItem value={0.5}>1/2</MenuItem>
+                                <MenuItem value={1}>1</MenuItem>
+                                <MenuItem value={2}>2</MenuItem>
+                                <MenuItem value={3}>3</MenuItem>
+                                <MenuItem value={5}>5</MenuItem>
+                                <MenuItem value={8}>8</MenuItem>
+                                <MenuItem value={13}>13</MenuItem>
                             </Select>
                             <FormHelperText>Points</FormHelperText>
                         </FormControl>
@@ -130,7 +129,7 @@ class Poker extends React.Component {
 
 function PokerPoll(props) {
     return (
-        <div className="center">
+        <div>
             <TextField
                 id="joincode"
                 label="Room join code"
@@ -152,15 +151,15 @@ const PokerVoteList = ({castVotes}) => {
     const pokerFace = castVotes.map((vote) => {
         return (<PokerMember user={vote.user} key={vote.user.id} points={vote.points}/>)
     });
-    return (<div>{pokerFace}</div>);
+    return (<div className="votegrid">{pokerFace}</div>);
 
 };
 
 const PokerMember = ({user, points}) => {
     return (
-        <span id={user.id}>
-            <h2>{user.name}</h2>
-            <h3>{points}</h3>
+        <span className="castvote" id={user.id}>
+            <h4>{user.name}</h4>
+            {points}
         </span>
     )
 };

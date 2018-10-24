@@ -8,12 +8,34 @@
 }
 
 .root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
     font-size: calc(10px + 2vmin);
     color: black;
+}
+
+.center {
+    text-align: center;
+}
+
+.centercolumn {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 300px;
+    grid-template-rows: repeat( auto-fit, 100px );
+
+}
+
+.votegrid {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+.castvote {
+    font-size: 16pt;
 }
 
 .small {

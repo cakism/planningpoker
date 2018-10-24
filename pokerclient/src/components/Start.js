@@ -14,6 +14,7 @@ class Start extends Component {
                     <Button variant="contained" component={CreateLink} color='primary' className="actionbtn">
                         Create
                     </Button>
+                    <hr/>
                     <Button variant="contained" component={JoinLink} color='primary' className="actionbtn">
                         Join
                     </Button>

@@ -62,7 +62,7 @@ class Create extends React.Component {
                 transitionEnter={false}
                 transitionLeave={false}>
 
-                <div className="root">
+                <div className="centercolumn">
                     <h1>Create a new poll</h1>
                     <TextField
                         required
