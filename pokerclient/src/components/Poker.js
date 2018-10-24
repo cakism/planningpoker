@@ -71,7 +71,9 @@ class Poker extends React.Component {
     render() {
         //const { classes } = this.props;
 
-        const baseUrl = "http://localhost:8080/app";
+
+        const baseUrl = window.location.protocol + '//'+ window.location.hostname +":8080/app";
+        console.log("Starting with baseurl: "+baseUrl)
         return (
             <CSSTransitionGroup
                 transitionName="baseTransition"

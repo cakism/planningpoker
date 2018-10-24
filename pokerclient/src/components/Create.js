@@ -34,7 +34,8 @@ class Create extends React.Component {
             "pollName": this.state.pollName,
             "pollDescription": this.state.pollDescription
         };
-        axios.post('http://localhost:8080/create', newPoll)
+        const baseUrl = window.location.protocol + '//'+ window.location.hostname +":8080";
+        axios.post(baseUrl+'/create', newPoll)
             .then(function (response) {
                 if (response.status === 200) {
 

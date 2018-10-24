@@ -9,7 +9,7 @@ import org.springframework.messaging.handler.annotation.*
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:3000"])
+@CrossOrigin(origins = ["*"], allowedHeaders = ["*"])
 class VotingController {
 
     private val log = LoggerFactory.getLogger(VotingController::class.java)

@@ -31,10 +31,10 @@
 */node_modules/*
 
 # testing
-/coverage
+/pokerclient/coverage
 
 # production
-/build
+/pokerclient/build
 
 # misc
 .DS_Store
