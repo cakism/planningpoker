@@ -19,7 +19,6 @@ class Poker extends React.Component {
             points: '',
             poll: ''
         };
-        //TODO const msgDestinationBaseUrl = '/vote/' + this.state.joinCode + "."; god damn scope shit
     }
 
     componentDidMount() {
@@ -32,7 +31,7 @@ class Poker extends React.Component {
 
     castVote = (event) => {
         let points = event.target.value
-        this.setState({ [event.target.name]: points });
+        this.setState({[event.target.name]: points});
         console.log("Got new vote event with " + points + " points");
         this.clientRef.sendMessage('/vote/' + this.state.joinCode + '.vote', points)
     };
@@ -106,6 +105,7 @@ class Poker extends React.Component {
                             </Select>
                             <FormHelperText>Points</FormHelperText>
                         </FormControl>
+                        <PokerVoteList castVotes={[]}/>
                     </div>
                 </div>
             </CSSTransitionGroup>
@@ -132,22 +132,23 @@ function PokerPoll(props) {
     )
 }
 
-const PokerVoteList = (props) => {
-    return (
-        <div>
+const PokerVoteList = ({castVotes}) => {
 
-        </div>
-    )
-}
+    const pokerFace = castVotes.map((vote) => {
+        return (<PokerMember user={vote.from} key={vote.from.id} points={vote.points}/>)
+    });
+    return (<div>{pokerFace}</div>);
 
-function PokerMember(props) {
+};
+
+const PokerMember = ({user, points}) => {
     return (
-        <div id={props.vote.user.id}>
-            <h2>{props.vote.user.user}</h2>
-            <h3>{props.vote.points}</h3>
-        </div>
+        <span id={user.id}>
+            <h2>{user.user}</h2>
+            <h3>{points}</h3>
+        </span>
     )
-}
+};
 
 //TODO typechecking with proptypes
 export default Poker

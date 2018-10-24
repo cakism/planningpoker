@@ -27,7 +27,8 @@ class Join extends React.Component {
     handleJoin = event => {
         var self = this
         //Todo : input check
-        axios.post('http://localhost:8080/createuser', this.state.username)
+        let newUser = {username: this.state.username}
+        axios.post('http://localhost:8080/createuser', newUser)
             .then(function (response) {
                 if (response.status === 200) {
 

@@ -3,7 +3,6 @@ package im.jens.projectplanner.service
 import im.jens.projectplanner.model.CastVote
 import im.jens.projectplanner.model.PlanningTask
 import im.jens.projectplanner.model.User
-import im.jens.projectplanner.model.Vote
 
 interface TaskSessionService {
 
@@ -11,7 +10,7 @@ interface TaskSessionService {
 
     fun getAllVotes(taskId: Long): Collection<CastVote>
 
-    fun registerVote(taskId: Long, vote: Vote, user: User): CastVote
+    fun registerVote(taskId: Long, vote: String, user: User): CastVote
 
     fun getTask(joinCode: String): PlanningTask
 }

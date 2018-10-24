@@ -29,8 +29,8 @@ class VotingController {
     }
 
     @RequestMapping("/createuser", method = [RequestMethod.POST])
-    fun createUser(@RequestBody username: String): User {
-        return userSessionService.createUser(username)
+    fun createUser(@RequestBody user: UserDTO): User {
+        return userSessionService.createUser(user.username)
     }
 
 
@@ -38,12 +38,12 @@ class VotingController {
     @SendTo("/topic/{pollCode}.votes")
     fun vote(@Header("simpSessionId") sessionId: String,
              @DestinationVariable("pollCode") pollCode: String,
-             @Payload vote: Vote): CastVote? {
-        log.info("Received vote from room $pollCode with ${vote.points} from session: $sessionId")
+             @Payload vote: Number): CastVote? {
+        log.info("Received vote from room $pollCode with $vote from session: $sessionId")
         return try {
             val task = taskSessionService.getTask(pollCode) //throws exception if no task is found for pollcode
             val user = userSessionService.getUser(sessionId) //throws exception if no user if found for sessionid
-            taskSessionService.registerVote(task.id, vote, user) //Returns castVote
+            taskSessionService.registerVote(task.id, vote.toString(), user) //Returns castVote
         } catch (e: Exception) {
             log.error("Error while trying to cast vote: $e")
             null

@@ -3,7 +3,6 @@ package im.jens.projectplanner.service
 import im.jens.projectplanner.model.CastVote
 import im.jens.projectplanner.model.PlanningTask
 import im.jens.projectplanner.model.User
-import im.jens.projectplanner.model.Vote
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Service
@@ -45,8 +44,8 @@ class TaskSessionServiceImpl : TaskSessionService {
         return ArrayList(taskRepo[taskId]?.votes)
     }
 
-    override fun registerVote(taskId: Long, vote: Vote, user: User): CastVote {
-        val castVote = CastVote(user, vote.points)
+    override fun registerVote(taskId: Long, vote: String, user: User): CastVote {
+        val castVote = CastVote(user, vote)
         taskRepo[taskId]?.votes?.add(castVote)
         return castVote
     }
