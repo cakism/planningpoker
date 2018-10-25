@@ -29,4 +29,4 @@ This simple planning poker app is built with:
 ## Known issues
 * If you disconnect your vote will still be visible to others and reconnecting will give you a new user and vote
 * No input or type validation so please respect the Required astrixes and dont break stuff :)
-* Error handling is pretty non-existant so if the app starts to behave weirdly after you refresh the page or something, just go back to start and rejoin the room with a new user (sorry)
+* Error handling is pretty non-existant so if the app starts to behave weirdly after you refresh the page or something, just go back to start and rejoin the room with a new user (sorry). There should atleast be helpful logging both in your browser devconsole and in the backend to help you figure out what's going on :)
