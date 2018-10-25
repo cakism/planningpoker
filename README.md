@@ -10,7 +10,7 @@ This simple planning poker app is built with:
 - Install node modules, currently needs to be done from within the client folder (sorry) `cd pokerclient`
 -  `npm install`
 - Run npm script `npm run build`
-- Serve with something like [Serve](https://www.npmjs.com/package/serve) `serve -g build`
+- Serve with something like [Serve](https://www.npmjs.com/package/serve) `serve -s build`
 - Run Spring-Boot server from project root `./gradlew bootRun`
 
 ## Instructions:
